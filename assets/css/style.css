@@ -1,0 +1,61 @@
+body {
+    background-color: whitesmoke;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.card {
+    margin: 0 auto;
+}
+
+.btn {
+    border-radius: 4rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.card-body {
+}
+
+.card-text {
+    border-top: 2px solid lightgray;
+    border-bottom: 2px solid lightgray;
+    padding: 12px 0;
+    margin-bottom: 1rem;
+}
+
+#password {
+    display: block;
+    border: 2px dashed lightgray;
+    width: 100%;
+    text-align: center;    
+}
+
+
+#generate {
+     float: left;
+}
+
+#copy {
+    float: right;
+}
+
+#copy:disabled {
+    background-color: lightgray;
+    cursor: default;
+}
+
+@media screen and (max-width: 640px) {
+    #generate,
+    #copy {
+        float: none;
+        width: 100%;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+
