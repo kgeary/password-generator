@@ -1,10 +1,24 @@
 /* Constants */
 const MIN_CHARS = 8;
 const MAX_CHARS = 128;
-const CHARS_LOWER = "abcdefghijklmnopqrstuvwxyz";
-const CHARS_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const CHARS_NUMBER = "0123456789";
-const CHARS_SPECIAL = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"; // TODO
+const CHAR_OPTIONS = [
+    {
+        description: "SPECIAL characters",
+        charSet: " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+    },
+    {
+        description: "NUMBERS",
+        charSet: "0123456789"
+    },
+    {
+        description: "UPPERCASE characters",
+        charSet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    {
+        description: "LOWERCASE characters",
+        charSet: "abcdefghijklmnopqrstuvwxyz"
+    },
+];
 
 /* Get Button Elements from the Page */
 let btnGenerate = document.getElementById("generate");
@@ -76,11 +90,12 @@ function getLength() {
 function getChars() {
     let chars = "";
 
-    if (confirm("Use Special Characters?")) { chars += CHARS_SPECIAL; }
-    if (confirm("Use Numbers?")) { chars += CHARS_NUMBER; }
-    if (confirm("Use Lowercase Characters?")) { chars += CHARS_LOWER; }
-    if (confirm("Use Uppercase Characters?")) { chars += CHARS_UPPER; }
-    
+    for (let index=0; index<CHAR_OPTIONS.length; index++) {
+        let option = CHAR_OPTIONS[index];
+        if (confirm("Use " + option.description + "?")){
+            chars += option.charSet;
+        }
+    }
     return chars;
 }
 

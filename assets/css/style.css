@@ -17,9 +17,6 @@ header {
     padding-right: 2rem;
 }
 
-.card-body {
-}
-
 .card-text {
     border-top: 2px solid lightgray;
     border-bottom: 2px solid lightgray;
@@ -31,6 +28,7 @@ header {
     display: block;
     border: 2px dashed lightgray;
     width: 100%;
+    padding: 0.5rem;
     text-align: center;    
 }
 
