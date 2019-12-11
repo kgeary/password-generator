@@ -10,55 +10,53 @@ const CHARS_SPECIAL = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"; // TODO
 let btnGenerate = document.getElementById("generate");
 let btnCopy = document.getElementById("copy");
 
+//*********************************
+// EVENT HANDLERS
+//*********************************
 /*
  * Handle the button click Generate event
+ *   1. Prompt user for password options
+ *   2. Generate the Password
+ *   3. Update the HTML with result
  */
 btnGenerate.addEventListener("click", function() {
-    askUser();
+    let length = getLength();
+    if (length < 0) {
+        alert("INVALID INPUT - Length must be an integer between " + MIN_CHARS + " and " + MAX_CHARS + "!");
+        return;
+    }
+
+    let availableChars = getChars();
+    if (availableChars === "") {
+        alert("INVALID INPUT - You must select at least 1 character set to use");
+        return;
+    }
+
+    let password = createPassword(availableChars, length);
+    updatePage(password);
 });
 
 /*
  * Handle the button click Copy event
+ * Copies the generated password to clipboard
  */
 btnCopy.addEventListener("click", function() {    
-    var pw = document.getElementById("password");
+    let pw = document.getElementById("password");
     pw.select();
     pw.setSelectionRange(0, 99999);
     document.execCommand("copy");
 });
 
+//*********************************
+// SUPPORT FUNCTIONS
+//*********************************
 /*
- * Prompt the User for Password options, Generate a password, and update Page
- */
-function askUser() {
-    let lengthInput = prompt("How long should the password be? (8-128 characters)");
-    let length = validateLength(lengthInput);
-    if (length < 0) {
-        alert("Length must be a valid integer between 8-128!");
-        return;
-    }
-
-    let base = "";
-
-    if (confirm("Use Special Characters?")) { base += CHARS_SPECIAL; }
-    if (confirm("Use Numbers?")) { base += CHARS_NUMBER; }
-    if (confirm("Use Lowercase Characters?")) { base += CHARS_LOWER; }
-    if (confirm("Use Uppercase Characters?")) { base += CHARS_UPPER; }
-
-    if (base === "") {
-        alert("You must select some type of characters to use");
-        return;
-    }
-
-    let password = generatePassword(base, length);
-    updatePage(password);
-}
-
-/*
- *  Validate the Input length.
+ *  Prompt the user for a password length
+ *  Validate the input.
  *  Returns length if valid or -1 if input was not valid
  */
-function validateLength(lengthInput) {
+function getLength() {
+    let lengthInput = prompt("How long should the password be? (" + MIN_CHARS + " - " + MAX_CHARS + " characters)");
     let length = parseFloat(lengthInput);
 
     if (!Number.isInteger(length)) {
@@ -72,12 +70,28 @@ function validateLength(lengthInput) {
 }
 
 /*
- *  Generate a password of a specified length from the useable characters string
+ * Give the user a series of prompt to determine which characters to use
+ * Returns a string of characters that can be used in the password
  */
-function generatePassword(useableChars, length) {
+function getChars() {
+    let chars = "";
+
+    if (confirm("Use Special Characters?")) { chars += CHARS_SPECIAL; }
+    if (confirm("Use Numbers?")) { chars += CHARS_NUMBER; }
+    if (confirm("Use Lowercase Characters?")) { chars += CHARS_LOWER; }
+    if (confirm("Use Uppercase Characters?")) { chars += CHARS_UPPER; }
+    
+    return chars;
+}
+
+/*
+ *  Create a random password string of a specified length from the available characters string
+ *  Returns randomly generated string
+ */
+function createPassword(availableChars, length) {
     let result = "";
     for (let index=0; index<length; index++) {
-        result += getRandomChar(useableChars);
+        result += getRandomChar(availableChars);
     }
     return result;
 }
@@ -91,9 +105,9 @@ function updatePage(password) {
 }
 
 /*
- *  Return a random character from a string
+ *  Return a single random character from a string of available characters
  */
-function getRandomChar(str) {
-    let index = Math.floor(Math.random() * str.length);
-    return str[index];
+function getRandomChar(availableChars) {
+    let index = Math.floor(Math.random() * availableChars.length);
+    return availableChars[index];
 }
