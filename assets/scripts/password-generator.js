@@ -20,6 +20,10 @@ const CHAR_OPTIONS = [
     },
 ];
 
+/* Globals */
+let pwLength = 0;
+let pwChars = "";
+
 /* Get Button Elements from the Page */
 let btnGenerate = document.getElementById("generate");
 let btnCopy = document.getElementById("copy");
@@ -34,20 +38,10 @@ let btnCopy = document.getElementById("copy");
  *   3. Update the HTML with result
  */
 btnGenerate.addEventListener("click", function() {
-    let length = getLength();
-    if (length < 0) {
-        alert("INVALID INPUT - Length must be an integer between " + MIN_CHARS + " and " + MAX_CHARS + "!");
-        return;
+    if (pwChars !== "" || getOptions()) {
+        let password = createPassword(pwChars, pwLength);
+        updatePage(password);
     }
-
-    let availableChars = getChars();
-    if (availableChars === "") {
-        alert("INVALID INPUT - You must select at least 1 character set to use");
-        return;
-    }
-
-    let password = createPassword(availableChars, length);
-    updatePage(password);
 });
 
 /*
@@ -58,7 +52,7 @@ btnCopy.addEventListener("click", function() {
     let pw = document.getElementById("password");
     pw.select();
     pw.setSelectionRange(0, 99999);
-    document.execCommand("copy");
+    document.execCommand("copy");   
 });
 
 //*********************************
@@ -67,8 +61,23 @@ btnCopy.addEventListener("click", function() {
 /*
  *  Prompt the user for a password length
  *  Validate the input.
- *  Returns length if valid or -1 if input was not valid
- */
+ *  Returns true on success, false otherwise 
+ * */
+function getOptions() {
+    pwLength = getLength();
+    if (pwLength < 0) {
+        alert("INVALID INPUT - Length must be an integer between " + MIN_CHARS + " and " + MAX_CHARS + "!");
+        return false;
+    }
+
+    pwChars = getChars();
+    if (pwChars === "") {
+        alert("INVALID INPUT - You must select at least 1 character set to use");
+        return false;
+    }
+    return true;
+}
+
 function getLength() {
     let lengthInput = prompt("How long should the password be? (" + MIN_CHARS + " - " + MAX_CHARS + " characters)");
     let length = parseFloat(lengthInput);
