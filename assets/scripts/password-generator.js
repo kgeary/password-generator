@@ -21,23 +21,25 @@ const CHAR_OPTIONS = [
 ];
 
 /* Globals */
-let pwLength = 0;
+let pwLength = -1;
 let pwChars = "";
 
-/* Get Button Elements from the Page */
-let btnGenerate = document.getElementById("generate");
-let btnCopy = document.getElementById("copy");
+/* Get Elements from the Page */
+let btnGenerateEl = document.getElementById("generate");
+let btnCopyEl = document.getElementById("copy");
+let txtPasswordEl = document.getElementById("password");
 
 //*********************************
 // EVENT HANDLERS
 //*********************************
+
 /*
  * Handle the button click Generate event
- *   1. Prompt user for password options
+ *   1. Prompt user for password options if not already selected
  *   2. Generate the Password
  *   3. Update the HTML with result
  */
-btnGenerate.addEventListener("click", function() {
+btnGenerateEl.addEventListener("click", function() {
     if (pwChars !== "" || getOptions()) {
         let password = createPassword(pwChars, pwLength);
         updatePage(password);
@@ -48,21 +50,23 @@ btnGenerate.addEventListener("click", function() {
  * Handle the button click Copy event
  * Copies the generated password to clipboard
  */
-btnCopy.addEventListener("click", function() {    
-    let pw = document.getElementById("password");
-    pw.select();
-    pw.setSelectionRange(0, 99999);
+btnCopyEl.addEventListener("click", function() {    
+    txtPasswordEl.select();
+    txtPasswordEl.setSelectionRange(0, 99999);
     document.execCommand("copy");   
 });
+
 
 //*********************************
 // SUPPORT FUNCTIONS
 //*********************************
+
 /*
  *  Prompt the user for a password length
  *  Validate the input.
  *  Returns true on success, false otherwise 
- * */
+ * 
+ */
 function getOptions() {
     pwLength = getLength();
     if (pwLength < 0) {
@@ -78,6 +82,9 @@ function getOptions() {
     return true;
 }
 
+/*
+ * Prompt the user for a Password Length and validate the input
+ */
 function getLength() {
     let lengthInput = prompt("How long should the password be? (" + MIN_CHARS + " - " + MAX_CHARS + " characters)");
     let length = parseFloat(lengthInput);
@@ -125,7 +132,7 @@ function createPassword(availableChars, length) {
  */
 function updatePage(password) {
     document.getElementById("password").textContent = password;
-    document.getElementById("copy").disabled = false;
+    btnCopyEl.disabled = false;
 }
 
 /*
