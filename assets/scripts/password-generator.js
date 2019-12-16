@@ -4,19 +4,23 @@ const MAX_CHARS = 128;
 const CHAR_OPTIONS = [
     {
         description: "SPECIAL characters",
-        charSet: " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+        charSet: " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
+        use: false,
     },
     {
         description: "NUMBERS",
-        charSet: "0123456789"
+        charSet: "0123456789",
+        use: false,
     },
     {
         description: "UPPERCASE characters",
-        charSet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        charSet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        use: false,
     },
     {
         description: "LOWERCASE characters",
-        charSet: "abcdefghijklmnopqrstuvwxyz"
+        charSet: "abcdefghijklmnopqrstuvwxyz",
+        use: false,
     },
 ];
 
@@ -110,6 +114,7 @@ function getChars() {
         let option = CHAR_OPTIONS[index];
         if (confirm("Use " + option.description + "?")){
             chars += option.charSet;
+            CHAR_OPTIONS[index].use = true;
         }
     }
     return chars;
@@ -120,11 +125,31 @@ function getChars() {
  *  Returns randomly generated string
  */
 function createPassword(availableChars, length) {
-    let result = "";
-    for (let index=0; index<length; index++) {
-        result += getRandomChar(availableChars);
-    }
+    let result;
+    let badPw;
+    do {
+        result = "";
+        badPw = false;
+        for (let index=0; index<length; index++) {
+            result += getRandomChar(availableChars);
+        }
+        for (let index=0; index<CHAR_OPTIONS.length; index++) {
+            if (CHAR_OPTIONS[index].use && !isUsingChars(CHAR_OPTIONS[index].charSet, result)) {
+                badPw = true;
+                break;
+            }
+        }
+    } while(badPw);
     return result;
+}
+
+function isUsingChars(charSet, password) {
+    for(let index=0; index<charSet.length; index++) {
+        if (password.includes(charSet[index])) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /*
